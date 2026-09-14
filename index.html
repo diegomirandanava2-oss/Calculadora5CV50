@@ -3,42 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculadora Web</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Calculadora</title>
+  <link rel="stylesheet" href="Style.css">
 </head>
 <body>
-
   <div class="calculator">
-    <div class="display">
-      <div id="previous-operand" class="previous-operand"></div>
-      <div id="current-operand" class="current-operand">0</div>
+    <div class="top-bar">
+      <span class="icon">&#9776;</span>
+      <span class="icon">&#128336;</span>
     </div>
-    <div class="buttons-grid">
-      <button class="clear-btn" onclick="clearAll()">AC</button>
-      <button class="clear-btn" onclick="deleteDigit()">DEL</button>
-      <button class="operator-btn" onclick="chooseOperation('÷')">÷</button>
-      <button class="operator-btn" onclick="chooseOperation('×')">×</button>
 
-      <button onclick="appendNumber('7')">7</button>
-      <button onclick="appendNumber('8')">8</button>
-      <button onclick="appendNumber('9')">9</button>
-      <button class="operator-btn" onclick="chooseOperation('-')">-</button>
+    <div class="display">
+      <div id="operation" class="operation"></div>
+      <div id="result" class="result">0</div>
+    </div>
 
-      <button onclick="appendNumber('4')">4</button>
-      <button onclick="appendNumber('5')">5</button>
-      <button onclick="appendNumber('6')">6</button>
-      <button class="operator-btn" onclick="chooseOperation('+')">+</button>
+    <div class="keypad">
+      <button class="btn btn-purple" onclick="clearAll()">C</button>
+      <button class="btn btn-purple" onclick="deleteLast()">&#9003;</button>
+      <button class="btn btn-purple" onclick="toggleSign()">+/-</button>
+      <button class="btn btn-purple" onclick="appendPercentage()">%</button>
 
-      <button onclick="appendNumber('1')">1</button>
-      <button onclick="appendNumber('2')">2</button>
-      <button onclick="appendNumber('3')">3</button>
-      <button class="equal-btn" onclick="compute()">=</button>
+      <button class="btn btn-white" onclick="appendNumber('7')">7</button>
+      <button class="btn btn-white" onclick="appendNumber('8')">8</button>
+      <button class="btn btn-white" onclick="appendNumber('9')">9</button>
+      <button class="btn btn-dark-purple" onclick="appendOperator('÷')">&#247;</button>
 
-      <button onclick="appendNumber('0')">0</button>
-      <button onclick="appendNumber('.')">.</button>
+      <button class="btn btn-white" onclick="appendNumber('4')">4</button>
+      <button class="btn btn-white" onclick="appendNumber('5')">5</button>
+      <button class="btn btn-white" onclick="appendNumber('6')">6</button>
+      <button class="btn btn-dark-purple" onclick="appendOperator('×')">&#215;</button>
+
+      <button class="btn btn-white" onclick="appendNumber('1')">1</button>
+      <button class="btn btn-white" onclick="appendNumber('2')">2</button>
+      <button class="btn btn-white" onclick="appendNumber('3')">3</button>
+      <button class="btn btn-dark-purple" onclick="appendOperator('-')">&minus;</button>
+
+      <button class="btn btn-white" onclick="appendNumber('0')">0</button>
+      <button class="btn btn-white" onclick="appendDecimal('.')">.</button>
+      <button class="btn btn-dark-purple" onclick="appendOperator('+')">+</button>
+      <button class="btn btn-accent" onclick="calculate()">=</button>
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <script src="Script.js"></script>
 </body>
 </html>
