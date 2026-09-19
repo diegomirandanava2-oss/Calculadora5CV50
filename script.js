@@ -1,157 +1,146 @@
 let currentInput = '0';
-let previousInput = '';
-let operator = null;
-let resetScreen = false;
-let isPercentOperation = false; // Registra si la entrada actual es un porcentaje
+let operationString = '';
+let memoryValue = 0;
+let newNumber = true;
 
 const resultDisplay = document.getElementById('result');
 const operationDisplay = document.getElementById('operation');
 
 function updateDisplay() {
-  resultDisplay.innerText = currentInput;
-  if (operator !== null) {
-    if (isPercentOperation) {
-      operationDisplay.innerText = `${previousInput} ${operator} ${currentInput}%`;
-    } else {
-      operationDisplay.innerText = `${previousInput} ${operator}`;
-    }
-  } else {
-    operationDisplay.innerText = '';
-  }
+    if (resultDisplay) resultDisplay.innerText = currentInput;
+    if (operationDisplay) operationDisplay.innerText = operationString;
 }
 
-function appendNumber(number) {
-  if (currentInput === '0' || resetScreen) {
-    currentInput = number;
-    resetScreen = false;
-  } else {
-    currentInput += number;
-  }
-  isPercentOperation = false;
-  updateDisplay();
+// === NÚMEROS Y DECIMALES ===
+function appendNumber(num) {
+    if (currentInput === '0' || currentInput === 'Error' || newNumber) {
+        currentInput = num;
+        newNumber = false;
+    } else {
+        currentInput += num;
+    }
+    updateDisplay();
 }
 
 function appendDecimal(dot) {
-  if (resetScreen) {
-    currentInput = '0.';
-    resetScreen = false;
-  } else if (!currentInput.includes('.')) {
-    currentInput += dot;
-  }
-  isPercentOperation = false;
-  updateDisplay();
-}
-
-function appendOperator(op) {
-  if (operator !== null && !resetScreen) calculate();
-  previousInput = currentInput;
-  operator = op;
-  resetScreen = true;
-  isPercentOperation = false;
-  updateDisplay();
-}
-
-function toggleSign() {
-  if (currentInput !== '0') {
-    if (currentInput.startsWith('-')) {
-      currentInput = currentInput.slice(1);
-    } else {
-      currentInput = '-' + currentInput;
+    if (newNumber) {
+        currentInput = '0.';
+        newNumber = false;
+    } else if (!currentInput.includes('.')) {
+        currentInput += dot;
     }
     updateDisplay();
-  }
 }
 
-function appendPercentage() {
-  // Si no hay operador previo (ej. solo pones 100 y presionas %)
-  if (operator === null) {
-    let value = parseFloat(currentInput);
-    if (!isNaN(value)) {
-      currentInput = formatResult(value / 100);
-      updateDisplay();
+// === OPERADORES MATEMÁTICOS ===
+function appendOperator(op) {
+    if (operationString === '' || newNumber) {
+        operationString = currentInput + ' ' + op + ' ';
+    } else {
+        // Permite encadenar operaciones antes de presionar "="
+        calculateInternal();
+        operationString = currentInput + ' ' + op + ' ';
     }
-    return;
-  }
+    currentInput = '0';
+    newNumber = true;
+    updateDisplay();
+}
 
-  // Si hay un operador (ej. 100 + 10 y luego presionas %)
-  isPercentOperation = true;
-  updateDisplay();
+function calculateInternal() {
+    if (operationString === '') return;
+    let expression = operationString + currentInput;
+    expression = expression.replace(/×/g, '*').replace(/÷/g, '/');
+    
+    try {
+        let result = eval(expression);
+        if (!isFinite(result)) {
+            currentInput = 'Error';
+        } else {
+            currentInput = Number(result.toFixed(2)).toString(); // Máximo 2 decimales
+        }
+    } catch (e) {
+        currentInput = 'Error';
+    }
 }
 
 function calculate() {
-  if (operator === null || resetScreen) return;
-
-  let prev = parseFloat(previousInput);
-  let current = parseFloat(currentInput);
-  let computation = 0;
-
-  if (isNaN(prev) || isNaN(current)) return;
-
-  // Si el usuario presionó el botón %, se calcula la porción equivalente
-  if (isPercentOperation) {
-    if (operator === '+' || operator === '-') {
-      // Calcula el porcentaje sobre el valor base (ej. el 10% de 100 = 10)
-      current = (prev * current) / 100;
-    } else if (operator === '×' || operator === '÷') {
-      current = current / 100;
-    }
-  }
-
-  switch (operator) {
-    case '+':
-      computation = prev + current;
-      break;
-    case '-':
-      computation = prev - current;
-      break;
-    case '×':
-      computation = prev * current;
-      break;
-    case '÷':
-      if (current === 0) {
-        alert("Error: No se puede dividir entre cero");
-        clearAll();
-        return;
-      }
-      computation = prev / current;
-      break;
-    default:
-      return;
-  }
-
-  if (isPercentOperation) {
-    operationDisplay.innerText = `${previousInput} ${operator} ${currentInput}% =`;
-  } else {
-    operationDisplay.innerText = `${previousInput} ${operator} ${currentInput} =`;
-  }
-
-  currentInput = formatResult(computation);
-  operator = null;
-  resetScreen = true;
-  isPercentOperation = false;
-  resultDisplay.innerText = currentInput;
+    calculateInternal();
+    operationString = ''; 
+    newNumber = true;
+    updateDisplay();
 }
 
-function formatResult(num) {
-  return (Math.round(num * 100) / 100).toString();
-}
-
+// === FUNCIONES DE HERRAMIENTAS (C, Borrar, Signo, Porcentaje) ===
 function clearAll() {
-  currentInput = '0';
-  previousInput = '';
-  operator = null;
-  resetScreen = false;
-  isPercentOperation = false;
-  updateDisplay();
+    currentInput = '0';
+    operationString = '';
+    newNumber = true;
+    updateDisplay();
 }
 
 function deleteLast() {
-  if (resetScreen) return;
-  if (currentInput.length === 1 || (currentInput.length === 2 && currentInput.startsWith('-'))) {
-    currentInput = '0';
-  } else {
-    currentInput = currentInput.slice(0, -1);
-  }
-  isPercentOperation = false;
-  updateDisplay();
+    if (newNumber) return; // Evita borrar el resultado de una operación terminada
+    if (currentInput.length > 1) {
+        currentInput = currentInput.slice(0, -1);
+        if (currentInput === '-' || currentInput === '') currentInput = '0';
+    } else {
+        currentInput = '0';
+        newNumber = true;
+    }
+    updateDisplay();
+}
+
+function toggleSign() {
+    if (currentInput !== '0' && currentInput !== 'Error') {
+        if (currentInput.startsWith('-')) {
+            currentInput = currentInput.substring(1);
+        } else {
+            currentInput = '-' + currentInput;
+        }
+        updateDisplay();
+    }
+}
+
+function appendPercentage() {
+    let val = parseFloat(currentInput);
+    if (isNaN(val)) return;
+
+    if (operationString !== '') {
+        // Porcentaje relativo (Ej: 200 + 10%)
+        let prevVal = parseFloat(operationString);
+        if (!isNaN(prevVal)) {
+            currentInput = (prevVal * (val / 100)).toString();
+        }
+    } else {
+        // Porcentaje directo (Ej: 50% = 0.5)
+        currentInput = (val / 100).toString();
+    }
+    updateDisplay();
+}
+
+// === FUNCIONES DE MEMORIA (M+, M-, MR, MC) ===
+function handleMC() {
+    memoryValue = 0;
+}
+
+function handleMR() {
+    currentInput = memoryValue.toString();
+    newNumber = true;
+    updateDisplay();
+}
+
+function handleMPlus() {
+    let val = parseFloat(currentInput);
+    if (!isNaN(val)) {
+        memoryValue += val;
+    }
+    newNumber = true; // Reinicia el input para el siguiente número
+}
+
+function handleMMinus() {
+    let val = parseFloat(currentInput);
+    if (!isNaN(val)) {
+        memoryValue -= val;
+    }
+    newNumber = true;
 }

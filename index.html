@@ -3,46 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculadora</title>
+  <title>Calculadora v2.0 - Memoria y Tema Oscuro</title>
   <link rel="stylesheet" href="Style.css">
 </head>
 <body>
   <div class="calculator">
-    <div class="top-bar">
-      <span class="icon">&#9776;</span>
-      <span class="icon">&#128336;</span>
-    </div>
-
     <div class="display">
       <div id="operation" class="operation"></div>
       <div id="result" class="result">0</div>
     </div>
 
     <div class="keypad">
-      <button class="btn btn-purple" onclick="clearAll()">C</button>
-      <button class="btn btn-purple" onclick="deleteLast()">&#9003;</button>
-      <button class="btn btn-purple" onclick="toggleSign()">+/-</button>
-      <button class="btn btn-purple" onclick="appendPercentage()">%</button>
+      <!-- Fila de Memoria -->
+      <button class="btn btn-memory" onclick="handleMC()">MC</button>
+      <button class="btn btn-memory" onclick="handleMR()">MR</button>
+      <button class="btn btn-memory" onclick="handleMPlus()">M+</button>
+      <button class="btn btn-memory" onclick="handleMMinus()">M-</button>
 
-      <button class="btn btn-white" onclick="appendNumber('7')">7</button>
-      <button class="btn btn-white" onclick="appendNumber('8')">8</button>
-      <button class="btn btn-white" onclick="appendNumber('9')">9</button>
-      <button class="btn btn-dark-purple" onclick="appendOperator('÷')">&#247;</button>
+      <!-- Funciones Clásicas -->
+      <button class="btn btn-tools" onclick="clearAll()">C</button>
+      <button class="btn btn-tools" onclick="deleteLast()">&#9003;</button>
+      <button class="btn btn-tools" onclick="toggleSign()">+/-</button>
+      <button class="btn btn-tools" onclick="appendPercentage()">%</button>
 
-      <button class="btn btn-white" onclick="appendNumber('4')">4</button>
-      <button class="btn btn-white" onclick="appendNumber('5')">5</button>
-      <button class="btn btn-white" onclick="appendNumber('6')">6</button>
-      <button class="btn btn-dark-purple" onclick="appendOperator('×')">&#215;</button>
+      <!-- Teclado Numérico y Operadores -->
+      <button class="btn btn-number" onclick="appendNumber('7')">7</button>
+      <button class="btn btn-number" onclick="appendNumber('8')">8</button>
+      <button class="btn btn-number" onclick="appendNumber('9')">9</button>
+      <button class="btn btn-operator" onclick="appendOperator('÷')">&#247;</button>
 
-      <button class="btn btn-white" onclick="appendNumber('1')">1</button>
-      <button class="btn btn-white" onclick="appendNumber('2')">2</button>
-      <button class="btn btn-white" onclick="appendNumber('3')">3</button>
-      <button class="btn btn-dark-purple" onclick="appendOperator('-')">&minus;</button>
+      <button class="btn btn-number" onclick="appendNumber('4')">4</button>
+      <button class="btn btn-number" onclick="appendNumber('5')">5</button>
+      <button class="btn btn-number" onclick="appendNumber('6')">6</button>
+      <button class="btn btn-operator" onclick="appendOperator('×')">&#215;</button>
 
-      <button class="btn btn-white" onclick="appendNumber('0')">0</button>
-      <button class="btn btn-white" onclick="appendDecimal('.')">.</button>
-      <button class="btn btn-dark-purple" onclick="appendOperator('+')">+</button>
-      <button class="btn btn-accent" onclick="calculate()">=</button>
+      <button class="btn btn-number" onclick="appendNumber('1')">1</button>
+      <button class="btn btn-number" onclick="appendNumber('2')">2</button>
+      <button class="btn btn-number" onclick="appendNumber('3')">3</button>
+      <button class="btn btn-operator" onclick="appendOperator('-')">&minus;</button>
+
+      <button class="btn btn-number" onclick="appendNumber('0')">0</button>
+      <button class="btn btn-number" onclick="appendDecimal('.')">.</button>
+      <button class="btn btn-operator" onclick="appendOperator('+')">+</button>
+      <button class="btn btn-equal" onclick="calculate()">=</button>
     </div>
   </div>
 
